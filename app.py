@@ -55,6 +55,12 @@ def _has_model(name_sub: str) -> bool:
 )
 @modal.web_server(port=11434, startup_timeout=1200)
 def serve():
+    # NOTE: a @modal.web_server function must LAUNCH the server and RETURN —
+    # it must not block forever. Modal keeps the container alive while the
+    # server listens on the port, and only starts proxying traffic once this
+    # function returns. (Blocking on serve_proc.wait() hung every request:
+    # the container booted and ollama answered locally, but the public
+    # endpoint never got a response.)
     env = dict(os.environ, OLLAMA_HOST="0.0.0.0:11434")
     serve_proc = subprocess.Popen(["ollama", "serve"], env=env)
     try:
@@ -86,8 +92,8 @@ def serve():
         else:
             print("custom model 'uncensored' already exists", flush=True)
 
-        print("ready, serving on :11434", flush=True)
-        serve_proc.wait()
-    finally:
-        if serve_proc.poll() is None:
-            serve_proc.terminate()
+        print("ready, serving on :11434 (returning, server keeps running)", flush=True)
+        return
+    except Exception:
+        serve_proc.terminate()
+        raise
