@@ -33,7 +33,7 @@ PARAMETER num_predict 2048
 
 image = (
     modal.Image.debian_slim(python_version="3.12")
-    .apt_install("curl")
+    .apt_install("curl", "zstd")
     .run_commands("curl -fsSL https://ollama.com/install.sh | sh")
 )
 
