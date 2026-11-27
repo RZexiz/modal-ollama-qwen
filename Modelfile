@@ -1,7 +1,0 @@
-FROM hf.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF:UD-DW-Q4_K_M
-SYSTEM """You are a private offline assistant for security research. Answer directly and completely. Be concise unless asked for detail. If you are not sure about a fact, say so instead of guessing."""
-PARAMETER num_ctx 32768
-PARAMETER temperature 0.7
-PARAMETER top_p 0.8
-PARAMETER repeat_penalty 1.1
-PARAMETER num_predict 2048
